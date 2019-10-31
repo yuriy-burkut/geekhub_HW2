@@ -17,25 +17,21 @@ class MainActivity : AppCompatActivity() {
             arguments = intent.extras
         }
 
-       if (savedInstanceState == null) {
+        if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .add(android.R.id.content, list)
                 .commit()
         }
 
-        if (savedInstanceState != null && resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            supportFragmentManager.beginTransaction()
-                .replace(android.R.id.content, list)
-                .commit()
-        }
-
-        if (savedInstanceState != null && resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            supportFragmentManager.beginTransaction()
-                .replace(android.R.id.content, list)
-                .commit()
+        if (savedInstanceState != null) {
+            when (resources.configuration.orientation) {
+                Configuration.ORIENTATION_PORTRAIT -> supportFragmentManager.beginTransaction()
+                    .replace(android.R.id.content, list)
+                    .commit()
+                Configuration.ORIENTATION_LANDSCAPE -> supportFragmentManager.beginTransaction()
+                    .replace(android.R.id.content, list)
+                    .commit()
+            }
         }
     }
-
-
-
 }

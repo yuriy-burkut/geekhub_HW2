@@ -8,8 +8,8 @@
     android:id="@+id/container">
 
     <FrameLayout
-        class="com.yuriy.fragmentexample.ListFragment"
-        android:id="@+id/id_list"
+        android:id="@+id/id_list_container"
+        android:tag="listFragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

@@ -1,20 +1,21 @@
 package com.yuriy.fragmentexample
 
-data class Item(val title: String, val description: String, val imageRes: Int)
+import java.io.InputStream
+
+data class Item(
+    val title: String?,
+    val link: String?,
+    val date: String?
+)
 
 object DataHelper {
-    private val booksList = mutableListOf<Item>()
+    const val rssFeedUrl: String = "https://theguardian.com/world/rss"
 
-    init {
-        createBooksList()
+    fun createNewsListFromRSS(stream: InputStream?): List<Item> {
+        if (stream != null) {
+            return RssParser().parse(stream)
+        } else return listOf(Item("null", "null", "null"))
     }
-
-    private fun createBooksList() {
-        for (i in 0..100) {
-            booksList.add(Item("Book $i", "Book $i  description", R.drawable.ic_image_black_24dp))
-        }
-    }
-
-    fun getBooksList() : List<Item> = booksList
-
 }
+
+

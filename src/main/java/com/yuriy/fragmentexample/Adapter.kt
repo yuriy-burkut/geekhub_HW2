@@ -6,7 +6,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.list_item.view.*
 
-class ItemsAdapter(private val itemsList: List<Item>) : RecyclerView.Adapter<ItemsAdapter.ItemsViewHolder>() {
+class ItemsAdapter(private val itemsList: List<Item>, private val callback: AdapterCallback) :
+    RecyclerView.Adapter<ItemsAdapter.ItemsViewHolder>() {
+
+    interface AdapterCallback {
+        fun onItemClick(position: Int)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
         return ItemsViewHolder(view)
@@ -20,11 +26,23 @@ class ItemsAdapter(private val itemsList: List<Item>) : RecyclerView.Adapter<Ite
         holder.bind(itemsList[position])
     }
 
-    class ItemsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ItemsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
+
+        private lateinit var item: Item
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
         fun bind(item: Item) = with(itemView) {
             item_title.text = item.title
-            item_description.text = item.description
-            item_image.setImageResource(item.imageRes)
+            item_date.text = item.date?.take(11)
+            this@ItemsViewHolder.item = item
+        }
+
+        override fun onClick(v: View?) {
+            callback.onItemClick(adapterPosition)
         }
     }
 }

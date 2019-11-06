@@ -27,9 +27,7 @@ class ArticleFragment : Fragment() {
         } else {
             val args: Bundle? = arguments
 
-            if (args != null) {
-                goToUrl(args.getString(ARGS_URL) ?: "https://www.theguardian.com/us")
-            }
+            goToUrl(args?.getString(ARGS_URL) ?: "https://www.theguardian.com/us")
         }
     }
 

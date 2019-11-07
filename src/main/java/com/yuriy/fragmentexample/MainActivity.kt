@@ -4,6 +4,8 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 
+var selectedURL : String = "https://www.theguardian.com/us"
+
 class MainActivity : AppCompatActivity(), ListFragment.OnArticleSelectedListener {
 
     private var list = ListFragment()
@@ -45,6 +47,9 @@ class MainActivity : AppCompatActivity(), ListFragment.OnArticleSelectedListener
 
             when (resources.configuration.orientation) {
                 Configuration.ORIENTATION_LANDSCAPE -> with(supportFragmentManager) {
+                    val args = Bundle()
+                    args.putString(ARGS_URL, selectedURL)
+                    article.arguments = args
                     beginTransaction().replace(R.id.id_article_container, article).commit()
                 }
                 Configuration.ORIENTATION_PORTRAIT -> with(supportFragmentManager) {
@@ -55,6 +60,7 @@ class MainActivity : AppCompatActivity(), ListFragment.OnArticleSelectedListener
     }
 
     override fun onArticleSelected(url: String) {
+        selectedURL = url
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             article.goToUrl(url)
         } else {

@@ -34,7 +34,13 @@ class ListFragment : Fragment(), ItemsAdapter.AdapterCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        newsList = DownloadXmlTask().execute(DataHelper.rssFeedUrl).get() ?: emptyList()
+        if (savedInstanceState != null) {
+            newsList = savedInstanceState.getParcelableArrayList<Item>("key")?.toList() ?:
+                    DownloadXmlTask().execute(DataHelper.rssFeedUrl).get() ?: emptyList()
+        } else {
+            newsList = DownloadXmlTask().execute(DataHelper.rssFeedUrl).get() ?: emptyList()
+        }
+
         return inflater.inflate(R.layout.list_fragment, container, false)
     }
 
@@ -49,6 +55,11 @@ class ListFragment : Fragment(), ItemsAdapter.AdapterCallback {
 
     override fun onItemClick(position: Int) {
         callback.onArticleSelected(newsList[position].link ?: "empty")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelableArrayList("key", ArrayList(newsList))
     }
 
     private inner class DownloadXmlTask : AsyncTask<String, Unit, List<Item>>() {

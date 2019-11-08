@@ -15,6 +15,8 @@ import java.io.IOException
 import java.net.URL
 import java.net.URLConnection
 
+const val LIST_KEY = "listKey"
+
 class ListFragment : Fragment(), ItemsAdapter.AdapterCallback {
 
     interface OnArticleSelectedListener {
@@ -35,7 +37,7 @@ class ListFragment : Fragment(), ItemsAdapter.AdapterCallback {
         savedInstanceState: Bundle?
     ): View? {
         if (savedInstanceState != null) {
-            newsList = savedInstanceState.getParcelableArrayList<Item>("key")?.toList() ?:
+            newsList = savedInstanceState.getParcelableArrayList<Item>(LIST_KEY)?.toList() ?:
                     DownloadXmlTask().execute(DataHelper.rssFeedUrl).get() ?: emptyList()
         } else {
             newsList = DownloadXmlTask().execute(DataHelper.rssFeedUrl).get() ?: emptyList()
@@ -59,7 +61,7 @@ class ListFragment : Fragment(), ItemsAdapter.AdapterCallback {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelableArrayList("key", ArrayList(newsList))
+        outState.putParcelableArrayList(LIST_KEY, ArrayList(newsList))
     }
 
     private inner class DownloadXmlTask : AsyncTask<String, Unit, List<Item>>() {
